@@ -1,9 +1,10 @@
 import time
 
-recursionBase=10
+recursionBase = 10
+
 
 def karatsuba(x, y):
-    if len(str(x) < recursionBase or len(str(y)) < recursionBase:
+    if len(str(x)) < recursionBase or len(str(y)) < recursionBase:
         return x * y
     n = max(len(str(x)), len(str(y)))
     half = n // 2
@@ -33,9 +34,7 @@ def karatsuba(x, y):
 
 #     print(f"{length}\t{karatsuba_time:.10f}\t{builtin_time:.10f}")
 
-a=-100
-b=999
-print(karatsuba(a,b))
 
-
-        
+a = -100
+b = 999
+print(karatsuba(a, b))
