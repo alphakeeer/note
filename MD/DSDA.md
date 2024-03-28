@@ -384,17 +384,191 @@
       return -1  # 如果未找到目标值，返回-1
   ```
 
-- **时间复杂度**：$O(n)=(logn)$
+- **时间复杂度**：$O(n)=(logn)$​
 
+# **Karatsuba 算法**
 
+- **定义**：Karatsuba算法是一种快速乘法算法，用于大数的乘法，由安纳托利·卡拉次巴*Anatolii Alexeevitch Karatsuba*在1960年发明。它是基于分治法的原理，通过减少大数乘法问题所需的基本乘法运算次数来提高效率。
 
+- **算法原理**：
 
+  > **原乘法**：两个长度为$n$的大数相乘，$X$每一位对$Y$乘后相加，总时间复杂度为$O(n^2)$
+  >
+  > **改良**：将$X$和$Y$分成两个部分：$X = 10^{\frac{n}{2}} * A + B$ 以及 $Y = 10^{\frac{n}{2}} * C + D$ ，$a$和$b$是$X$的高位和低位部分，$c$和$d$是$Y$​的高位和低位部分。
+  >
+  > 传统算法通过计算四个乘积：$ab,cd,ac,bd$，并将其处理后求和，*Karatsuba*则使用三个乘积：
+  >
+  > 1. 计算$ac$
+  > 2. 计算$bd$
+  > 3. 计算$(a+b) \times (c+d)$（这实际上等于$ac + ad + bc + bd$​）
+  > 4. $X \times Y = 10^n \cdot ac + 10^{n/2} \times [(a+b) \times (c+d) - ac - bd] + bd$
 
+- **代码实现**：
 
+  ```python
+  def karatsuba(x, y):
+      if x < 10 or y < 10:
+          return x * y
+  
+      # 计算大小
+      n = max(len(str(x)), len(str(y)))
+      half = n // 2
+      
+      # 分割输入数字
+      a = x // 10**(half)
+      b = x % 10**(half)
+      c = y // 10**(half)
+      d = y % 10**(half)
+      
+      # 递归计算
+      ac = karatsuba(a, c)
+      bd = karatsuba(b, d)
+      ad_plus_bc = karatsuba(a + b, c + d) - ac - bd
+      
+      # 合并结果
+      product = ac * 10**(2*half) + (ad_plus_bc * 10**half) + bd
+  
+      return product
+  ```
 
+- **时间复杂度**：$O(n^{log_2 3})$或约为$O(n^{1.585})$ 
 
+# **快速排序 Quicksort**
 
+- **定义**：快速排序是一种高效的排序算法，由Tony Hoare在1960年代初提出。它使用**分治法**（Divide and Conquer）的策略来对一个数组进行排序，其核心思想是通过一个分区操作将要排序的数组分割成独立的两部分，其中一部分的所有数据都比另一部分的所有数据都要小，然后再递归地对这两部分数据分别进行快速排序。
 
+- **实现**：
+
+  >1. **选择基准值（Pivot）**：从数组中选择一个元素作为基准值。基准值的选择可以有多种方式，例如选择第一个元素、最后一个元素、中间元素或随机元素。
+  >2. **分区（Partition）**：重新排列数组，使得所有比基准值小的元素都移动到基准值的前面，所有比基准值大的元素都移动到基准值的后面。这一步结束时，基准值就处于其最终位置。
+  >3. **递归排序**：递归地对基准值前后的两个子数组进行快速排序。
+  >
+  >
+
+- **代码实现**：
+
+  ```python
+  # Simple way
+  def quicksort(arr):
+      if len(arr) <= 1:
+          return arr
+      else:
+          pivot = arr[0]
+          left = [x for x in arr[1:] if x <= pivot]
+          right = [x for x in arr[1:] if x > pivot]
+          return quicksort(left) + [pivot] + quicksort(right)
+  ```
+
+  ```py
+  # In-place way 空间复杂度优化
+  def quicksort(arr, low, high):
+      if low < high:
+          # partitionIndex是分区操作正确放置基准值的索引位置
+          partitionIndex = partition(arr, low, high)
+  
+          # 分别对基准值左右两边的子数组递归排序
+          quicksort(arr, low, partitionIndex - 1)
+          quicksort(arr, partitionIndex + 1, high)
+  
+  def partition(arr, low, high):
+      pivot = arr[high]  # 选择最后一个元素作为基准
+      i = low - 1  # i是小于基准值元素的最后一个元素的索引
+  
+      for j in range(low, high):
+          # 当前元素小于或等于基准值
+          if arr[j] <= pivot:
+              i += 1
+              arr[i], arr[j] = arr[j], arr[i]
+  
+      # 将基准值移动到正确的位置
+      arr[i+1], arr[high] = arr[high], arr[i+1]
+      return i + 1
+  ```
+
+  - **时间复杂度分析**：
+
+    - **最好情况**：如果每次都能将数组分为两个几乎相等的部分，那么快速排序的时间复杂度为$\Theta(n \log n)$
+
+      **公式**：$T(n) = 2T(n/2) + \Theta(n)$
+
+      其中，$T(n/2)$表示对半分的子数组排序的时间，$(\Theta(n))$表示分区操作的时间。
+
+    - **最坏情况**：如果每次分区操作后，一个子数组包含了除基准元素外的所有元素，那么快速排序的时间复杂度退化为$(O(n^2))$。
+
+      **公式**：$T(n) = T(n-1) + \Theta(n)$
+
+      这种情况通常发生在数组已经是正序或逆序的情况下。
+
+    - **平均情况**：考虑到所有可能的分区方式，快速排序的平均时间复杂度也是$(O(n \log n))$。
+
+# Quick Select 快速搜索
+
+- **定义**：Quick Select 是一种在未排序的列表中找到第 k 小（或第 k 大）元素的算法。它是由 Tony Hoare 于1961年提出，同样也是快速排序算法的发明者。Quick Select 的工作原理与快速排序相似，但它仅递归地处理找到第 k 个元素所需的那一部分数组，而不是像快速排序那样处理整个数组。这使得它在找到特定顺序元素方面比完全排序整个数组更高效。
+
+- **原理**：
+
+  > 1. **选择一个枢纽（Pivot）元素**：从数组中选择一个元素作为枢纽。
+  > 2. **分区（Partitioning）**：重新排列数组，使得所有比枢纽小的元素都移到枢纽的左边，所有比枢纽大的元素都移到枢纽的右边。枢纽元素现在在其最终位置上。
+  > 3. 递归选择：
+  >    - 如果枢纽元素正好是第 $k$ 小的元素，算法结束。
+  >    - 如果枢纽元素的位置大于 $k$，那么只在枢纽的左边数组中递归地执行 Quick Select。
+  >    - 如果枢纽元素的位置小于 $k$，那么只在枢纽的右边数组中递归地执行 Quick Select，调整 $k$ 的值为 -$k - (枢纽的位置 + 1)$。
+
+- **代码实现**：
+
+  ```py
+  def quick_select(arr, left, right, k):
+      """
+      找到数组 arr 中第 k 小的元素。
+      :param arr: 输入的数组
+      :param left: 考虑数组的起始索引
+      :param right: 考虑数组的结束索引
+      :param k: 找到的元素的顺序（第k小的元素）
+      :return: 第 k 小的元素
+      """
+      if left <= right:
+          # 进行分区
+          pivot_index = partition(arr, left, right)
+          # 如果 pivot 正好是第k小的元素
+          if pivot_index == k:
+              return arr[pivot_index]
+          elif pivot_index < k:
+              # 在右侧寻找
+              return quick_select(arr, pivot_index + 1, right, k)
+          else:
+              # 在左侧寻找
+              return quick_select(arr, left, pivot_index - 1, k)
+      return -1  # 如果 k 超出范围
+  
+  def partition(arr, left, right):
+      """
+      以最右侧的元素作为枢纽进行分区，并返回枢纽的索引。
+      :param arr: 输入的数组
+      :param left: 考虑数组的起始索引
+      :param right: 考虑数组的结束索引
+      :return: 枢纽的索引
+      """
+      pivot = arr[right]
+      i = left
+      for j in range(left, right):
+          if arr[j] < pivot:
+              arr[i], arr[j] = arr[j], arr[i]
+              i += 1
+      arr[i], arr[right] = arr[right], arr[i]  # 将枢纽放到最终位置
+      return i
+  ```
+
+- **复杂度**：
+
+  > **平均时间复杂度**：$O(n)$，其中 n 是数组的大小。
+  >
+  > **最坏情况时间复杂度**：$O(n²)$，这发生在每次分区操作都极度不平衡时。
+  >
+  > **空间复杂度**：$O(1)$（迭代实现）或 $O(log(n))$（递归实现，因为递归调用堆栈）。
+
+# 动态规划 Dynamic Programming
+
+- **定义**：动态规划（Dynamic Programming，简称 DP）是一种算法设计方法，它将复杂问题分解为简单的子问题，并用这些子问题的解来构建原问题的解。动态规划通常用于**优化递归算法**，特别是在递归过程中有大量重复计算时。动态规划的核心思想是**记忆化（Memorization）**与**表格化（Tabulation）**，这两种技术都是为了存储子问题的解以避免重复计算。
 
 
 
