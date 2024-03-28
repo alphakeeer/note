@@ -27,11 +27,9 @@ def karatsuba(x, y):
 #     start_time = time.time()
 #     karatsuba(x, y)
 #     karatsuba_time = time.time() - start_time
-
 #     start_time = time.time()
 #     x * y
 #     builtin_time = time.time() - start_time
-
 #     print(f"{length}\t{karatsuba_time:.10f}\t{builtin_time:.10f}")
 
 
