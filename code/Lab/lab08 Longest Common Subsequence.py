@@ -5,6 +5,7 @@ marr = list(map(int, input().split()))
 if n > m:
     n, m, narr, marr = m, n, marr, narr
     
+#时间复杂度O(mn)还能优化？？？
 #空间复杂度min(m,n)但10ac,5爆时间
 def solution(n, m, narr, marr):  # n<m
     dp = [0 for _ in range(m+1)]

@@ -5,18 +5,22 @@ nums = list(map(int, sys.stdin.readline().split()))
 
 # 尝试dp again
 # AC14 TLE16
-#时间复杂度O(n^3)
-#空间复杂度O(n^2)
+# 时间复杂度O(n^3)
+# 空间复杂度O(n^2)
+
+
 def solution(n, nums):
     dp = [[0 for _ in range(n)] for _ in range(n)]
-    for length in range(2, n+1):        #遍历矩阵组的长度
-        for i in range(n-length+1):     #遍历初始点
-            j = i+length-1              #末点
+    for length in range(2, n+1):  # 遍历矩阵组的长度
+        for i in range(n-length+1):  # 遍历初始点
+            j = i+length-1  # 末点
             dp[i][j] = float("inf")
-            a=nums[i]*nums[j+1]
-            for k in range(i, j):       #划分
+            a = nums[i]*nums[j+1]
+            for k in range(i, j):  # 划分
                 cur = dp[i][k]+dp[k+1][j]+a*nums[k+1]
-                dp[i][j] = min(dp[i][j], cur)
+                # dp[i][j] = min(dp[i][j], cur)
+                if dp[i][j] > cur:
+                    dp[i][j] = cur
     return dp[0][n-1]
 
 
@@ -64,6 +68,3 @@ print(solution(n, nums))
 #     for val in dp[2].values():
 #         print(val)
 # solution(n, nums)
-
-
-
