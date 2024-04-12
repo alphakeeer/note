@@ -3,7 +3,7 @@ river = list(map(int, input().split()))
 
 # dp第一维记录到达i点时的最大积分
 # 用dp的第二维记录是否能达到，1为走过，0为无法到达
-# AC10 WA4 TLE1
+# AC13 WA1 TLE1
 
 
 def solution(n, l, r, river):
@@ -29,4 +29,4 @@ def solution(n, l, r, river):
     return ans
 
 
-print(solution(n, l, r, river))
+print(solution(n+1, l, r, river))
