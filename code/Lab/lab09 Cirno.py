@@ -5,7 +5,7 @@ def solution(n, l, r, river):
     dp = [float('-inf')] * (n)  # dp初始化为最小方便比较最大值
     dp[0] = 0       # 起始位置积分为0，非('-inf')即表示可达
     dq = deque([0])   # 双端列表，用于作为滑窗记录最大数的index
-
+    
     '''
     思路与原理：
     dp[i]为到达该点i时的最大积分
@@ -18,6 +18,7 @@ def solution(n, l, r, river):
     具体为使用deque双端列表的dq[0]记录最大值的index,达到更简单的状态转移方程
         dp[i]=river[i]+dp[dq[0]]
     '''
+    
     for i in range(l, n):  # 从l处开始遍历（因为是从i处向(i-r,i-l)得到数据）
 
         dp[i] = river[i]+dp[dq[0]]  # 状态转移方程，dq默认为0
