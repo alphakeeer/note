@@ -1,0 +1,9 @@
+{
+  "files.associations": {
+    "bsp_can.h": "c",
+    "struct_typedef.h": "c",
+    "main.h": "c"
+  },
+  "C_Cpp.intelliSenseEngine": "Tag Parser",
+  "C_Cpp.intelliSenseEngineFallback": "disabled"
+}
